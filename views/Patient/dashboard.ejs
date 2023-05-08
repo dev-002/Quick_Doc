@@ -19,10 +19,47 @@
         <div class="display-4">Welcome, <strong>
                 <%= patient.name %>
             </strong></div>
+        <hr class="line mt-5">
 
-            <div class="row">
-                <div class="col-4"><a href="/patient/appointment"><button class="btn btn-primary">Book Appointment</button></a></div>
-            </div>
+        <div class="container">
+            <div class="display-5">Appointments: </div>
+            <ul class="mt-3">
+                <% appointments.map((meet, index)=>{ %>
+                    <li>
+                        <div class="card" style="width: 40% ;">
+                            <div class="card-body">
+                                <h5 class="card-title">Appointment <%= index+1 %>
+                                </h5>
+                                <p class="card-text">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        Patient : <%= meet.patient.name %>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Doctor : Dr. <%= meet.doctor.name %>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Appointment Date: <%= meet.appointmentDate.toDateString() %>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Appointment Time: <%= meet.appointmentTime.toLocaleTimeString() %>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Appointment Type: <%= meet.appointmentType %>
+                                    </li>
+                                </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    <% }) %>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-4"><a href="/patient/appointment"><button class="btn btn-primary">Book
+                        Appointment</button></a></div>
+        </div>
     </div>
 </body>
 
