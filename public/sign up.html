@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up for Doctor Appointment Website</title>
+</head>
+<body>
+  <header>
+    <h1>Sign Up for Doctor Appointment Website</h1>
+  </header>
+
+  <main>
+    <form method="POST" action="/signup">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <label for="mobile">Mobile Number:</label>
+      <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" required>
+
+      <input type="submit" value="Sign Up">
+    </form>
+  </main>
+
+ 
+</body>
+</html>
