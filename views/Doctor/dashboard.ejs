@@ -18,14 +18,107 @@
         <hr class="line my-3">
         <div class="display-4">Welcome, <strong>
                 <%= doctor.name %>
-            </strong></div>
+            </strong>
+        </div>
 
         <div class="container">
             <div class="display-5">Appointments: </div>
+
+            <!-- Accepted and Rejected Appointments -->
+            <ul class="mt-3 d-flex justify-content-between">
+                <div class="row">
+                    <div class="col-5 m-auto">
+                        <div class="display-5 my-3 p-relative t-0">Accepted</div>
+                        <hr>
+                        <% if(approve.accepted.length !==0){ %>
+                            <% approve.accepted.map((meet, index)=>{ %>
+                                <li class="mt-3">
+                                    <div class="card" style="width: 90% ;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Appointment <%= index+1 %>
+                                            </h5>
+                                            <p class="card-text">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    Patient : <%= meet.patient.name %>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    Doctor : Dr. <%= meet.doctor.name %>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    Appointment Date: <%= meet.appointmentDate.toDateString() %>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    Appointment Time: <%= meet.appointmentTime.toLocaleTimeString() %>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    Appointment Type: <%= meet.appointmentType %>
+                                                </li>
+                                            </ul>
+                                            </p>
+                                            <div class=" btn btn-success" style="width: 100%;">
+                                                Accepted
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <% }) %>
+                                    <% }else{ %>
+                                        <div class="display-4">No Appointments Accepted</div>
+                                        <% } %>
+                    </div>
+
+                    <div class="col-2 m-auto"></div>
+
+                    <div class="col-5 m-auto">
+                        <div class="display-5 my-3 p-relative t-0">Rejected</div>
+                        <hr>
+                        <% if(approve.rejected.length !==0){ %>
+                            <% approve.rejected.map((meet, index)=>{ %>
+                                <li class="mt-3">
+                                    <div class="card" style="width: 90% ;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Appointment <%= index+1 %>
+                                            </h5>
+                                            <p class="card-text">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    Patient : <%= meet.patient.name %>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    Doctor : Dr. <%= meet.doctor.name %>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    Appointment Date: <%= meet.appointmentDate.toDateString() %>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    Appointment Time: <%= meet.appointmentTime.toLocaleTimeString() %>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    Appointment Type: <%= meet.appointmentType %>
+                                                </li>
+                                            </ul>
+                                            </p>
+                                            <div class=" btn btn-danger" style="width: 100%;">
+                                                Rejected
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <% }) %>
+                                    <% }else{ %>
+                                        <div class="display-4">No Appointments Rejected</div>
+                                        <% } %>
+                    </div>
+                </div>
+            </ul>
+
+            <!-- Pending Apponintments -->
             <ul class="mt-3">
+                <div class="display-5 my-3">Pending</div>
                 <% if(appointments.length !==0){ %>
                     <% appointments.map((meet, index)=>{ %>
-                        <li>
+                        <li class="mt-3">
                             <div class="card" style="width: 40% ;">
                                 <div class="card-body">
                                     <h5 class="card-title">Appointment <%= index+1 %>
@@ -50,20 +143,20 @@
                                     </ul>
                                     </p>
                                     <div class="card-footer d-flex justify-content-evenly">
-                                        <a href="/doctor/accept" class="card-link"><button
+                                        <a href="/doctor/accept/<%= meet._id %>" class="card-link"><button
                                                 class="btn btn-success">Accept</button></a>
-                                        <a href="/doctor/reject" class="card-link"><button
+                                        <a href="/doctor/reject/<%= meet._id %>" class="card-link"><button
                                                 class="btn btn-danger">Reject</button></a>
                                     </div>
                                 </div>
                             </div>
+                        </li>
+                        <% }) %>
+                            <% }else{ %>
+                                <div class="display-4">No Appointments</div>
+                                <% } %>
+            </ul>
         </div>
-        </li>
-        <% }) %>
-            <% }else{ %>
-                <div class="display-4">No Appointments</div>
-                <% } %>
-                    </ul>
     </div>
     </div>
 </body>

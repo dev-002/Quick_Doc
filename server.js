@@ -1,4 +1,4 @@
-if (process.env.NODE != 'production') {
+if (process.env.NODE_ENV != 'production') {
     require('dotenv').config();
 }
 const express = require('express');
@@ -6,9 +6,9 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const app = express();
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
-app.set(express.static('public'));
 
 // Mongoose Database
 mongoose.connect(process.env.MONGODB_URL, {
