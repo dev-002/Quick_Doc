@@ -22,11 +22,13 @@ mongoose.connect(process.env.MONGODB_URL, {
 
 // Routes
 const indexRoute = require('./routes/index');
-const patientRoute = require('./routes/patient');
 const loginRoute = require('./routes/login');
+const patientRoute = require('./routes/patient');
+const docotrRoute = require('./routes/doctor');
 
 app.use('/', indexRoute);
-app.use('/patient', patientRoute);
 app.use('/login', loginRoute);
+app.use('/patient', patientRoute);
+app.use('/doctor', docotrRoute);
 
 app.listen(process.env.PORT, () => console.log("Server started..."));

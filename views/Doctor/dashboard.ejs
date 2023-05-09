@@ -19,6 +19,52 @@
         <div class="display-4">Welcome, <strong>
                 <%= doctor.name %>
             </strong></div>
+
+        <div class="container">
+            <div class="display-5">Appointments: </div>
+            <ul class="mt-3">
+                <% if(appointments.length !==0){ %>
+                    <% appointments.map((meet, index)=>{ %>
+                        <li>
+                            <div class="card" style="width: 40% ;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Appointment <%= index+1 %>
+                                    </h5>
+                                    <p class="card-text">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            Patient : <%= meet.patient.name %>
+                                        </li>
+                                        <li class="list-group-item">
+                                            Doctor : Dr. <%= meet.doctor.name %>
+                                        </li>
+                                        <li class="list-group-item">
+                                            Appointment Date: <%= meet.appointmentDate.toDateString() %>
+                                        </li>
+                                        <li class="list-group-item">
+                                            Appointment Time: <%= meet.appointmentTime.toLocaleTimeString() %>
+                                        </li>
+                                        <li class="list-group-item">
+                                            Appointment Type: <%= meet.appointmentType %>
+                                        </li>
+                                    </ul>
+                                    </p>
+                                    <div class="card-footer d-flex justify-content-evenly">
+                                        <a href="/doctor/accept" class="card-link"><button
+                                                class="btn btn-success">Accept</button></a>
+                                        <a href="/doctor/reject" class="card-link"><button
+                                                class="btn btn-danger">Reject</button></a>
+                                    </div>
+                                </div>
+                            </div>
+        </div>
+        </li>
+        <% }) %>
+            <% }else{ %>
+                <div class="display-4">No Appointments</div>
+                <% } %>
+                    </ul>
+    </div>
     </div>
 </body>
 
