@@ -81,6 +81,7 @@ router.post('/doctor/login', async (req, res) => {
             );
 
             return await Appointment.find({
+                doctor: doctor._id,
                 _id: {
                     $nin: [...accepted, ...rejected],
                 }
