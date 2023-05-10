@@ -31,6 +31,7 @@
                     <div class="col-5 m-auto">
                         <div class="display-5 my-3 p-relative t-0">Accepted</div>
                         <hr>
+                        <% if(approves) {%>
                         <% if(approves.accepted.length !==0){ %>
                             <% approves.accepted.map((meet, index)=>{ %>
                                 <li class="mt-3">
@@ -64,6 +65,7 @@
                                     </div>
                                 </li>
                                 <% }) %>
+                                <% } %>
                                     <% }else{ %>
                                         <div class="display-4">No Appointments Accepted</div>
                                         <% } %>
@@ -74,6 +76,7 @@
                     <div class="col-5 m-auto">
                         <div class="display-5 my-3 p-relative t-0">Rejected</div>
                         <hr>
+                        <% if(approves){ %>
                         <% if(approves.rejected.length !==0){ %>
                             <% approves.rejected.map((meet, index)=>{ %>
                                 <li class="mt-3">
@@ -107,6 +110,7 @@
                                     </div>
                                 </li>
                                 <% }) %>
+                                <% } %>
                                     <% }else{ %>
                                         <div class="display-4">No Appointments Rejected</div>
                                         <% } %>
@@ -155,7 +159,7 @@
         <div class="d-flex justify-content-evenly my-3 mx-auto">
             <a href="/patient/appointment"><button class="btn btn-primary">Book
                     Appointment</button></a>
-            <a href="/home"><button class="btn btn-primary">Home</button></a>
+            <a href="/"><button class="btn btn-primary">Home</button></a>
 
         </div>
     </div>

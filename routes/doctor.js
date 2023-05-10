@@ -8,11 +8,11 @@ const router = express.Router();
 
 router.get('/accept/:_id', async (req, res) => {
     const appointment = await Appointment.findOne({ _id: req.params._id });
-    const accepted = appointment && await Approve.findOneAndUpdate(
+    const accept = appointment && await Approve.findOneAndUpdate(
         {},
         { $push: { accepted: appointment._id } },
         { new: true });
-    await accepted.save();
+    await accept.save();
     res.redirect('/login');
 });
 

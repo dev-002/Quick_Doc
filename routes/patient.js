@@ -13,6 +13,7 @@ router.get('/appointment', async (req, res) => {
 
 router.post('/bookAppointment', async (req, res) => {
     async function timeSet(time) {
+        // console.log(time);
         const timeArray = time.split(":");
         const date = new Date();
         date.setHours(timeArray[0]);
@@ -23,7 +24,7 @@ router.post('/bookAppointment', async (req, res) => {
 
     const doctor = await Doctor.findOne({ name: req.body.appointment.doctor });
     const patient = await Patient.findOne({ name: req.body.appointment.patient });
-    const appointment = new Appointment({ ...req.body.appointment, doctor: doctor._id, patient: patient._id, appointmentTime: await timeSet(req.body.appointment) });
+    const appointment = new Appointment({ ...req.body.appointment, doctor: doctor._id, patient: patient._id, appointmentTime: await timeSet(req.body.appointment.appointmentTime) });
     await appointment.save();
 
     res.redirect('/login');

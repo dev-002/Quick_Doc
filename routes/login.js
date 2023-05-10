@@ -39,7 +39,6 @@ router.post('/patient/login', async (req, res) => {
                 const rejected = approves.flatMap((approve) =>
                     approve.rejected.map((appointment) => appointment._id)
                 );
-
                 return await Appointment.find({
                     patient: patient._id,
                     _id: {
@@ -48,7 +47,7 @@ router.post('/patient/login', async (req, res) => {
                 }).populate('patient').populate('doctor');
             });
 
-        const approves = await Approve.findOne({}).populate({
+        const approves = await Approve.findOne({accepted: {_id: patient._id}}).populate({
             path: 'accepted',
             populate: [{ path: 'patient' }, { path: 'doctor' }]
         }).populate({
@@ -66,7 +65,7 @@ router.post('/patient/signup', async (req, res) => {
     const patient = new Patient({ ...req.body.patient });
     await patient.save();
     // const appointments = await patientAppoitment(patient._id);
-    res.render('Patient/dashboard', { patient, pendingAppointment: [], approves: [] });
+    res.render('Patient/dashboard', { patient, pendingAppointment: [], approves: { accepted: [], rejected: [] } });
 });
 
 router.post('/doctor/login', async (req, res) => {
@@ -82,14 +81,13 @@ router.post('/doctor/login', async (req, res) => {
             );
 
             return await Appointment.find({
-                doctor: doctor._id,
                 _id: {
                     $nin: [...accepted, ...rejected],
                 }
             }).populate('patient').populate('doctor');
         });
 
-    const approves = await Approve.findOne({}).populate({
+    const approves = await Approve.findOne({accepted: {_id: doctor._id}}).populate({
         path: 'accepted',
         populate: [{ path: 'patient' }, { path: 'doctor' }]
     })
@@ -133,7 +131,7 @@ router.post('/doctor/signup', async (req, res) => {
     //         populate: [{ path: 'patient' }, { path: 'doctor' }]
     //     });
 
-    res.render('Doctor/dashboard', { doctor, pendingAppointment: [], approves: [] });
+    res.render('Doctor/dashboard', { doctor, pendingAppointment: [], approves: { accepted: [], rejected: [] } });
 });
 
 module.exports = router;
