@@ -30,8 +30,34 @@ router.post('/patient/login', async (req, res) => {
     //     date: appointmentDate,
     //     type: appointmentType
     // };
-    if (patient && patient.password === password)
-        res.render('Patient/dashboard', { patient, appointments });
+    if (patient && patient.password === password) {
+        const pendingAppointment = await Approve.find({}).populate('accepted').populate('rejected')
+            .then(async (approves) => {
+                const accepted = approves.flatMap((approve) =>
+                    approve.accepted.map((appointment) => appointment._id)
+                );
+                const rejected = approves.flatMap((approve) =>
+                    approve.rejected.map((appointment) => appointment._id)
+                );
+
+                return await Appointment.find({
+                    patient: patient._id,
+                    _id: {
+                        $nin: [...accepted, ...rejected],
+                    }
+                }).populate('patient').populate('doctor');
+            });
+
+        const approves = await Approve.findOne({}).populate({
+            path: 'accepted',
+            populate: [{ path: 'patient' }, { path: 'doctor' }]
+        }).populate({
+            path: 'rejected',
+            populate: [{ path: 'patient' }, { path: 'doctor' }]
+        });
+
+        res.render('Patient/dashboard', { patient, approves, pendingAppointment });
+    }
     else
         res.render('error', { error: 'Wrong Credentials' });
 });
@@ -39,14 +65,13 @@ router.post('/patient/login', async (req, res) => {
 router.post('/patient/signup', async (req, res) => {
     const patient = new Patient({ ...req.body.patient });
     await patient.save();
-    const appointments = await patientAppoitment(patient._id);
-    res.render('Patient/dashboard', { patient, appointments });
+    // const appointments = await patientAppoitment(patient._id);
+    res.render('Patient/dashboard', { patient, pendingAppointment: [], approves: [] });
 });
 
 router.post('/doctor/login', async (req, res) => {
     let { name, password } = req.body.doctor;
-    doctor = await Doctor.findOne({ name });
-    const appointments = doctor && await doctorAppoitment(doctor._id);
+    const doctor = await Doctor.findOne({ name });
     const pendingAppointment = await Approve.find({}).populate('accepted').populate('rejected')
         .then(async (approves) => {
             const accepted = approves.flatMap((approve) =>
@@ -64,7 +89,7 @@ router.post('/doctor/login', async (req, res) => {
             }).populate('patient').populate('doctor');
         });
 
-    const approve = await Approve.findOne({}).populate({
+    const approves = await Approve.findOne({}).populate({
         path: 'accepted',
         populate: [{ path: 'patient' }, { path: 'doctor' }]
     })
@@ -73,7 +98,7 @@ router.post('/doctor/login', async (req, res) => {
             populate: [{ path: 'patient' }, { path: 'doctor' }]
         });
     if (doctor && doctor.password === password)
-        res.render('Doctor/dashboard', { doctor, pendingAppointment, approve });
+        res.render('Doctor/dashboard', { doctor, pendingAppointment, approves });
     else
         res.render('error', { error: 'Wrong Credentials' });
 });
@@ -99,16 +124,16 @@ router.post('/doctor/signup', async (req, res) => {
     //         }).populate('patient').populate('doctor');
     //     });
 
-    const approve = await Approve.findOne({}).populate({
-        path: 'accepted',
-        populate: [{ path: 'patient' }, { path: 'doctor' }]
-    })
-        .populate({
-            path: 'rejected',
-            populate: [{ path: 'patient' }, { path: 'doctor' }]
-        });
+    // const approves = await Approve.findOne({}).populate({
+    //     path: 'accepted',
+    //     populate: [{ path: 'patient' }, { path: 'doctor' }]
+    // })
+    //     .populate({
+    //         path: 'rejected',
+    //         populate: [{ path: 'patient' }, { path: 'doctor' }]
+    //     });
 
-    res.render('Doctor/dashboard', { doctor, pendingAppointment: [], approve });
+    res.render('Doctor/dashboard', { doctor, pendingAppointment: [], approves: [] });
 });
 
 module.exports = router;
