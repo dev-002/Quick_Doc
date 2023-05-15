@@ -6,18 +6,32 @@ const appointmentSchema = new Schema({
     doctor: { type: Schema.Types.ObjectId, ref: 'doctor' },
     appointmentDate: {
         type: Date,
-        // set: function (date) {
-        //     const validated = date.toLocalDateString().split(' ');
-        //     return validated[1] + ' ' + validated[2] + ' ' + validated[3];
+        required: true,
+        default: Date.now(),
+        // validate: {
+        //     validator: function (date) {
+        //         return
+        //     },
+        //     message: "Appointment Date should be in future"
         // }
     },
     appointmentTime: {
         type: Date,
-        // set: function (date) {
-        //     return date.getHours().getMinutes();
-        // }
+        required: true,
+        // min: Date.now(),
+        validate(time) {
+            const timeArr = time.toString().split(' ')[4].split(':');
+            console.log(timeArr)
+            if (!((timeArr[1] % 20 === 0) && (timeArr[0] > 16 && timeArr[0] < 18)))
+                throw new Error("Time should be between 4pm to 6pm \nAnd should be at an interval of 20 min");
+        },
+        required: [true, "Appointment Time Requires"]
     },
-    appointmentType: String
+    appointmentType: {
+        type: String,
+        required: true,
+        enum: { values: ["General Consultation", "Dental Checkup", "Eye Exam", "Physical Therapy", "Psychiatric Evaluation"], message: "{VALUE} Consultaion Available" }
+    }
 });
 
 module.exports = mongoose.model('appointment', appointmentSchema);

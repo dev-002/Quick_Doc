@@ -47,15 +47,23 @@ router.post('/patient/login', async (req, res) => {
                 }).populate('patient').populate('doctor');
             });
 
-        const approves = await Approve.findOne({accepted: {_id: patient._id}}).populate({
+        const approves = await Approve.findOne({}).populate({
             path: 'accepted',
             populate: [{ path: 'patient' }, { path: 'doctor' }]
         }).populate({
             path: 'rejected',
             populate: [{ path: 'patient' }, { path: 'doctor' }]
         });
+        const accepted = approves.accepted.filter(obj => {
+            if (obj.patient._id.toString() === patient._id.toString())
+                return obj
+        })
+        const rejected = approves.rejected.filter(obj => {
+            if (obj.patient._id.toString() === patient._id.toString())
+                return obj
+        })
 
-        res.render('Patient/dashboard', { patient, approves, pendingAppointment });
+        res.render('Patient/dashboard', { patient, pendingAppointment, accepted, rejected });
     }
     else
         res.render('error', { error: 'Wrong Credentials' });
@@ -88,7 +96,7 @@ router.post('/doctor/login', async (req, res) => {
             }).populate('patient').populate('doctor');
         });
 
-    const approves = await Approve.findOne({accepted: {_id: doctor._id}}).populate({
+    const approves = await Approve.findOne().populate({
         path: 'accepted',
         populate: [{ path: 'patient' }, { path: 'doctor' }]
     })
@@ -96,8 +104,16 @@ router.post('/doctor/login', async (req, res) => {
             path: 'rejected',
             populate: [{ path: 'patient' }, { path: 'doctor' }]
         });
+    const accepted = approves.accepted.filter(obj => {
+        if (obj.doctor._id.toString() === doctor._id.toString())
+            return obj
+    })
+    const rejected = approves.rejected.filter(obj => {
+        if (obj.doctor._id.toString() === doctor._id.toString())
+            return obj
+    })
     if (doctor && doctor.password === password)
-        res.render('Doctor/dashboard', { doctor, pendingAppointment, approves });
+        res.render('Doctor/dashboard', { doctor, pendingAppointment, accepted, rejected });
     else
         res.render('error', { error: 'Wrong Credentials' });
 });
