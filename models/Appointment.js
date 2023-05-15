@@ -7,10 +7,10 @@ const appointmentSchema = new Schema({
     appointmentDate: {
         type: Date,
         required: true,
-        default: Date.now(),
+        // default: Date.now(),
         // validate: {
         //     validator: function (date) {
-        //         return
+        //         console.log(date.toString())
         //     },
         //     message: "Appointment Date should be in future"
         // }
@@ -21,8 +21,7 @@ const appointmentSchema = new Schema({
         // min: Date.now(),
         validate(time) {
             const timeArr = time.toString().split(' ')[4].split(':');
-            console.log(timeArr)
-            if (!((timeArr[1] % 20 === 0) && (timeArr[0] > 16 && timeArr[0] < 18)))
+            if (!((timeArr[1] % 20 === 0) && (timeArr[0] >= 16 && timeArr[0] <= 18)))
                 throw new Error("Time should be between 4pm to 6pm \nAnd should be at an interval of 20 min");
         },
         required: [true, "Appointment Time Requires"]

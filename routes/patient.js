@@ -13,7 +13,6 @@ router.get('/appointment', async (req, res) => {
 
 router.post('/bookAppointment', async (req, res) => {
     async function timeSet(time) {
-        // console.log(time);
         const timeArray = time.split(":");
         const date = new Date();
         date.setHours(timeArray[0]);
